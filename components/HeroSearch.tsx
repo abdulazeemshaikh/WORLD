@@ -9,6 +9,7 @@ interface HeroSearchProps {
     onSearchComplete: (result: SearchResultItem[], query: string) => void;
     isSearching: boolean;
     compact?: boolean;
+    value?: string;
 }
 
 const PLACEHOLDERS = [
@@ -23,10 +24,15 @@ const PLACEHOLDERS = [
     "GOOGLE"
 ];
 
-const HeroSearch: React.FC<HeroSearchProps> = ({ onSearchStart, onSearchComplete, isSearching, compact = false }) => {
-    const [query, setQuery] = useState('');
+const HeroSearch: React.FC<HeroSearchProps> = ({ onSearchStart, onSearchComplete, isSearching, compact = false, value = '' }) => {
+    const [query, setQuery] = useState(value);
     const [placeholderIndex, setPlaceholderIndex] = useState(0);
     const [isFocused, setIsFocused] = useState(false);
+
+    // Sync query with external value prop
+    useEffect(() => {
+        setQuery(value);
+    }, [value]);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -182,7 +188,7 @@ const HeroSearch: React.FC<HeroSearchProps> = ({ onSearchStart, onSearchComplete
 
             <div className="mt-2 xs:mt-3 text-center px-4">
                 <p className="text-xs xs:text-sm md:text-base font-medium text-subtle/60 tracking-wide xs:tracking-wider leading-relaxed">
-                    The front door to all the right knowledge
+                    Understanding our Infinite Universe
                 </p>
             </div>
         </div>

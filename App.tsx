@@ -254,6 +254,7 @@ function App() {
                     onSearchComplete={handleSearchComplete}
                     isSearching={isSearching}
                     compact={true}
+                    value={searchQuery}
                   />
                 </div>
                 
