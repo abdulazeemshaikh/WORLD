@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { HashRouter } from 'react-router-dom';
-import { Network, Type, Lightbulb, Footprints, Moon, Sun, Sparkles, BookOpen, FlaskConical } from 'lucide-react';
+import { Network, Type, Lightbulb, Footprints, Moon, Sun, Sparkles, BookOpen, FlaskConical, Newspaper } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import HeroSearch from './components/HeroSearch';
 import CategoryCard from './components/CategoryCard';
 import CategoryToggle from './components/CategoryToggle';
+import SearchFilters from './components/SearchFilters';
 import ResultView from './components/ResultView';
 import ArticleView from './components/ArticleView';
 import { SearchResultItem } from './types';
@@ -53,6 +54,13 @@ const CATEGORIES_DATA = [
     fullLabel: 'Research Papers',
     icon: FlaskConical,
     description: "Scientific studies, academic papers, and cutting-edge discoveries.",
+  },
+  {
+    id: 'news',
+    label: 'News',
+    fullLabel: 'News & Updates',
+    icon: Newspaper,
+    description: "Current events, breaking stories, and timely updates from around the world.",
   }
 ];
 
@@ -64,6 +72,7 @@ function App() {
   const [articleCount, setArticleCount] = useState<number | null>(null);
   const [activeCategory, setActiveCategory] = useState('knowledge');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
 
   // Fetch real stats from Notion
   useEffect(() => {
@@ -116,6 +125,7 @@ function App() {
     setSelectedArticle(null);
     setIsSearching(false);
     setSearchQuery('');
+    setSelectedFilters([]);
   };
 
   const handleArticleSelect = (article: SearchResultItem) => {
@@ -124,6 +134,18 @@ function App() {
 
   const handleBackToResults = () => {
     setSelectedArticle(null);
+  };
+
+  const toggleFilter = (id: string) => {
+    setSelectedFilters(prev => 
+      prev.includes(id) 
+        ? prev.filter(f => f !== id) 
+        : [...prev, id]
+    );
+  };
+
+  const clearAllFilters = () => {
+    setSelectedFilters([]);
   };
 
   const selectedCategoryData = CATEGORIES_DATA.find(c => c.id === activeCategory);
@@ -142,7 +164,7 @@ function App() {
           />
         </div>
 
-        <div className="fixed top-2 xs:top-3 sm:top-4 right-2 xs:right-3 sm:right-4 md:right-8 z-[60] flex items-center gap-1 xs:gap-2">
+        <div className="fixed top-0 xs:top-1 sm:top-1.5 right-2 xs:right-3 sm:right-4 md:right-8 z-[60] flex items-center gap-1 xs:gap-2 -translate-x-px">
           <a
             href="https://calendly.com/l-f/free-consultation"
             target="_blank"
@@ -226,7 +248,7 @@ function App() {
             ) : searchResults ? (
               <div key="results" className="flex-1 animate-fade-in flex flex-col justify-start">
                 {/* Search Bar - Above Results */}
-                <div className="w-full max-w-4xl mx-auto px-2 xs:px-3 sm:px-4 mb-4 xs:mb-6 sm:mb-8">
+                <div className="w-full max-w-4xl mx-auto px-2 xs:px-3 sm:px-4 mb-3 xs:mb-4 sm:mb-5">
                   <HeroSearch
                     onSearchStart={handleSearchStart}
                     onSearchComplete={handleSearchComplete}
@@ -234,6 +256,17 @@ function App() {
                     compact={true}
                   />
                 </div>
+                
+                {/* Search Filters - Below Search Bar */}
+                <div className="w-full max-w-4xl mx-auto px-2 xs:px-3 sm:px-4 mb-4 xs:mb-6 sm:mb-8">
+                  <SearchFilters
+                    categories={CATEGORIES_DATA}
+                    selectedIds={selectedFilters}
+                    onToggle={toggleFilter}
+                    onClearAll={clearAllFilters}
+                  />
+                </div>
+                
                 <ResultView
                   results={searchResults}
                   onClear={clearSearch}
@@ -242,7 +275,19 @@ function App() {
                 />
               </div>
             ) : (
-              <div key="home" className={`transition-all duration-700 flex flex-col items-center -mt-2 xs:-mt-4 sm:-mt-[26px] ${isSearching ? 'opacity-30 pointer-events-none scale-95 blur-sm' : 'opacity-100 scale-100 blur-0'}`}>
+              <motion.div 
+                key="home" 
+                className="flex flex-col items-center mt-2"
+                initial={false}
+                animate={{ 
+                  opacity: isSearching ? 0.2 : 1,
+                  scale: isSearching ? 0.96 : 1,
+                  filter: isSearching ? 'blur(8px)' : 'blur(0px)',
+                  y: isSearching ? 8 : 0
+                }}
+                transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+                style={{ pointerEvents: isSearching ? 'none' : 'auto' }}
+              >
 
                 {/* Category Toggle Control */}
                 <CategoryToggle
@@ -252,29 +297,50 @@ function App() {
                 />
 
                 {/* Single Category Card Display */}
-                <div className="w-full max-w-lg mx-auto h-[160px] xs:h-[180px] sm:h-[200px] mb-2 xs:mb-4 relative perspective-1000">
+                <div className="w-full max-w-sm sm:max-w-md lg:max-w-lg mx-auto h-[140px] xs:h-[150px] sm:h-[160px] relative" style={{ perspective: '1200px' }}>
                   <AnimatePresence mode="wait">
                     {selectedCategoryData && (
                       <motion.div
                         key={selectedCategoryData.id}
-                        initial={{ opacity: 0, rotateX: -5, y: 10, scale: 0.98 }}
-                        animate={{ opacity: 1, rotateX: 0, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, rotateX: 5, y: -10, scale: 0.98 }}
-                        transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
+                        initial={{ 
+                          opacity: 0, 
+                          rotateX: -8, 
+                          y: 20, 
+                          scale: 0.95,
+                          filter: 'blur(4px)'
+                        }}
+                        animate={{ 
+                          opacity: 1, 
+                          rotateX: 0, 
+                          y: 0, 
+                          scale: 1,
+                          filter: 'blur(0px)'
+                        }}
+                        exit={{ 
+                          opacity: 0, 
+                          rotateX: 8, 
+                          y: -20, 
+                          scale: 0.95,
+                          filter: 'blur(4px)'
+                        }}
+                        transition={{ 
+                          duration: 0.4, 
+                          ease: [0.23, 1, 0.32, 1]
+                        }}
                         className="w-full h-full"
+                        style={{ transformStyle: 'preserve-3d' }}
                       >
                         <CategoryCard
                           icon={<selectedCategoryData.icon />}
                           label={selectedCategoryData.fullLabel}
                           description={selectedCategoryData.description}
-                          className=""
                         />
                       </motion.div>
                     )}
                   </AnimatePresence>
                 </div>
 
-              </div>
+              </motion.div>
             )}
           </AnimatePresence>
 

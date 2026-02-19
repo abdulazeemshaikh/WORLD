@@ -182,7 +182,7 @@ const HeroSearch: React.FC<HeroSearchProps> = ({ onSearchStart, onSearchComplete
 
             <div className="mt-2 xs:mt-3 text-center px-4">
                 <p className="text-xs xs:text-sm md:text-base font-medium text-subtle/60 tracking-wide xs:tracking-wider leading-relaxed">
-                    The front door to all the <span className="italic" style={{ fontFamily: '"Times New Roman", Times, serif' }}>right</span> knowledge
+                    The front door to all the right knowledge
                 </p>
             </div>
         </div>
