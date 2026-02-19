@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { LucideIcon, X, Check } from 'lucide-react';
+import { LucideIcon, Check, LayoutGrid } from 'lucide-react';
 
 export interface FilterCategory {
   id: string;
@@ -28,10 +28,50 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
       {/* Filter Pills Container */}
       <div 
         className="
-          flex flex-wrap justify-center gap-1.5 xs:gap-2
-          w-full max-w-2xl
+          flex flex-wrap justify-center gap-1 xs:gap-1.5
+          w-full max-w-xl
         "
       >
+        {/* All Filter Button */}
+        <motion.button
+          onClick={onClearAll}
+          whileTap={{ scale: 0.95 }}
+          className={`
+            relative flex items-center gap-1 xs:gap-1.5
+            px-2 xs:px-2.5 py-1 xs:py-1.5
+            rounded-full
+            text-[10px] xs:text-[11px] font-medium
+            transition-all duration-200 ease-out
+            select-none cursor-pointer
+            border
+            ${!hasSelections 
+              ? 'bg-ink text-paper border-ink dark:bg-white dark:text-black dark:border-white shadow-sm' 
+              : 'bg-paper text-subtle border-black/[0.08] dark:border-white/[0.1] hover:border-black/[0.15] dark:hover:border-white/[0.2] hover:text-ink'
+            }
+          `}
+        >
+          <LayoutGrid 
+            className={`
+              w-2.5 h-2.5 xs:w-3 xs:h-3
+              transition-all duration-200
+              ${!hasSelections ? 'stroke-[2]' : 'stroke-[1.5]'}
+            `}
+            aria-hidden="true"
+          />
+          <span className="whitespace-nowrap">All</span>
+          {!hasSelections && (
+            <motion.div
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0, opacity: 0 }}
+              transition={{ duration: 0.15 }}
+              className="flex items-center justify-center"
+            >
+              <Check className="w-2.5 h-2.5 stroke-[2.5]" />
+            </motion.div>
+          )}
+        </motion.button>
+
         {categories.map((cat) => {
           const isSelected = selectedIds.includes(cat.id);
           const Icon = cat.icon;
@@ -42,10 +82,10 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
               onClick={() => onToggle(cat.id)}
               whileTap={{ scale: 0.95 }}
               className={`
-                relative flex items-center gap-1.5 xs:gap-2
-                px-2.5 xs:px-3 py-1.5 xs:py-2
+                relative flex items-center gap-1 xs:gap-1.5
+                px-2 xs:px-2.5 py-1 xs:py-1.5
                 rounded-full
-                text-[11px] xs:text-xs font-medium
+                text-[10px] xs:text-[11px] font-medium
                 transition-all duration-200 ease-out
                 select-none cursor-pointer
                 border
@@ -58,7 +98,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
               {/* Icon */}
               <Icon 
                 className={`
-                  w-3 h-3 xs:w-3.5 xs:h-3.5
+                  w-2.5 h-2.5 xs:w-3 xs:h-3
                   transition-all duration-200
                   ${isSelected ? 'stroke-[2]' : 'stroke-[1.5]'}
                 `}
@@ -79,34 +119,12 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                   transition={{ duration: 0.15 }}
                   className="flex items-center justify-center"
                 >
-                  <Check className="w-3 h-3 stroke-[2.5]" />
+                  <Check className="w-2.5 h-2.5 stroke-[2.5]" />
                 </motion.div>
               )}
             </motion.button>
           );
         })}
-
-        {/* Clear All Button */}
-        {hasSelections && onClearAll && (
-          <motion.button
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.8, opacity: 0 }}
-            onClick={onClearAll}
-            className="
-              flex items-center gap-1
-              px-2 py-1.5
-              rounded-full
-              text-[10px] xs:text-[11px] font-medium
-              text-subtle/60 hover:text-subtle
-              transition-colors duration-200
-              select-none cursor-pointer
-            "
-          >
-            <X className="w-3 h-3 stroke-[2]" />
-            <span>Clear</span>
-          </motion.button>
-        )}
       </div>
 
       {/* Active filter count indicator */}

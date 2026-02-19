@@ -271,7 +271,7 @@ function App() {
                   results={searchResults}
                   onClear={clearSearch}
                   onSelectArticle={handleArticleSelect}
-                  searchQuery={searchQuery}
+                  selectedFilters={selectedFilters}
                 />
               </div>
             ) : (

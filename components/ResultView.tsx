@@ -29,17 +29,51 @@ const getCategoryIcon = (category: string) => {
     return Tag; // Default fallback
 };
 
+// Map category names to filter IDs for filtering
+const getCategoryFilterId = (category: string): string => {
+    const categoryLower = category.toLowerCase();
+    
+    if (categoryLower.includes('knowledge') || categoryLower.includes('pedia') || categoryLower.includes('encyclopedia')) {
+        return 'knowledge';
+    }
+    if (categoryLower.includes('language') || categoryLower.includes('dictionary') || categoryLower.includes('meaning')) {
+        return 'language';
+    }
+    if (categoryLower.includes('insight') || categoryLower.includes('thinking') || categoryLower.includes('idea')) {
+        return 'insights';
+    }
+    if (categoryLower.includes('guide') || categoryLower.includes('how') || categoryLower.includes('practical')) {
+        return 'guides';
+    }
+    if (categoryLower.includes('religious') || categoryLower.includes('spiritual') || categoryLower.includes('sacred')) {
+        return 'religious';
+    }
+    if (categoryLower.includes('research') || categoryLower.includes('paper') || categoryLower.includes('study') || categoryLower.includes('science')) {
+        return 'research';
+    }
+    if (categoryLower.includes('news') || categoryLower.includes('update') || categoryLower.includes('event')) {
+        return 'news';
+    }
+    
+    return 'other';
+};
+
 interface ResultViewProps {
     results: SearchResultItem[];
     onClear: () => void;
     onSelectArticle: (article: SearchResultItem) => void;
+    selectedFilters?: string[];
 }
 
-const ResultView: React.FC<ResultViewProps> = ({ results, onClear, onSelectArticle }) => {
+const ResultView: React.FC<ResultViewProps> = ({ results, onClear, onSelectArticle, selectedFilters = [] }) => {
+    // Filter results based on selected filters
+    const filteredResults = selectedFilters.length > 0
+        ? results.filter(item => selectedFilters.includes(getCategoryFilterId(item.category)))
+        : results;
     return (
         <div className="w-full max-w-4xl mx-auto px-2 xs:px-3 sm:px-4 pb-12 xs:pb-16 sm:pb-20">
             <div className="grid grid-cols-1 gap-2 xs:gap-3">
-                {results.map((item, index) => (
+                {filteredResults.map((item, index) => (
                     <motion.div
                         key={item.id}
                         initial={{ opacity: 0, y: 10 }}
@@ -79,9 +113,13 @@ const ResultView: React.FC<ResultViewProps> = ({ results, onClear, onSelectArtic
                 ))}
             </div>
 
-            {results.length === 0 && (
+            {filteredResults.length === 0 && (
                 <div className="text-center py-12 xs:py-16 sm:py-20 text-subtle">
-                    <p className="text-sm xs:text-base">No matching articles found in the knowledge base.</p>
+                    <p className="text-sm xs:text-base">
+                        {selectedFilters.length > 0 
+                            ? 'No articles match the selected filters.' 
+                            : 'No matching articles found in the knowledge base.'}
+                    </p>
                 </div>
             )}
         </div>
