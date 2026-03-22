@@ -156,8 +156,8 @@ function App() {
 
         {/* Logo - Visible on results and article pages, hidden on main page */}
         <div className={`fixed top-2 xs:top-3 sm:top-4 left-2 xs:left-3 sm:left-4 md:left-8 z-[60] transition-opacity duration-300 ${(!searchResults && !selectedArticle) ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
-          <img
-            src="/logo.png"
+            <img
+            src="./logo.png"
             alt="one1intellect"
             className="h-4 xs:h-5 md:h-6 w-auto cursor-pointer shrink-0 dark:invert"
             onClick={() => window.location.reload()}

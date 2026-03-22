@@ -118,7 +118,7 @@ const HeroSearch: React.FC<HeroSearchProps> = ({ onSearchStart, onSearchComplete
             {/* Central Branding */}
             <div className="relative mb-3 xs:mb-4 flex flex-col items-center justify-center cursor-pointer" onClick={() => window.location.reload()}>
                 <img 
-                    src="/logo.png" 
+                    src="./logo.png" 
                     alt="one1intellect" 
                     className="h-5 xs:h-6 md:h-8 w-auto dark:invert"
                 />
