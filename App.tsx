@@ -15,8 +15,8 @@ import { getDatabaseStats } from './services/notionService';
 const CATEGORIES_DATA = [
   {
     id: 'knowledge',
-    label: 'one1pedia',
-    fullLabel: 'one1pedia',
+    label: 'WORLDPedia',
+    fullLabel: 'WORLDPedia',
     icon: Network,
     description: "A comprehensive, verified encyclopedia of everything about the universe, world, reality, systems, and concepts.",
   },
