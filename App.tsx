@@ -9,7 +9,7 @@ import SearchFilters from './components/SearchFilters';
 import ResultView from './components/ResultView';
 import ArticleView from './components/ArticleView';
 import { SearchResultItem } from './types';
-import { getDatabaseStats } from './services/notionService';
+
 
 // Category Data Configuration
 const CATEGORIES_DATA = [
@@ -74,18 +74,9 @@ function App() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
 
-  // Fetch real stats from Notion
+  // Initialize stats locally
   useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const stats = await getDatabaseStats();
-        setArticleCount(stats.count);
-      } catch (e) {
-        console.error("Failed to fetch article count", e);
-        setArticleCount(0);
-      }
-    };
-    fetchStats();
+    setArticleCount(16417); // Fixed counter for demo
   }, []);
 
   // Initialize theme based on system preference
