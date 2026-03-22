@@ -9,18 +9,6 @@ export default defineConfig(({ mode }) => {
     server: {
       port: 3000,
       host: '0.0.0.0',
-      proxy: {
-        '/api/notion': {
-          target: 'https://api.notion.com/v1',
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api\/notion/, ''),
-          configure: (proxy, _options) => {
-            proxy.on('proxyReq', (proxyReq, _req, _res) => {
-              proxyReq.setHeader('Notion-Version', '2022-06-28');
-            });
-          }
-        }
-      }
     },
     build: {
       chunkSizeWarningLimit: 1000,
